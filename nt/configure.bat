@@ -89,6 +89,7 @@ echo. character by enclosing them in quotes will not be supported.
 
 rem ----------------------------------------------------------------------
 rem   Default settings.
+set gccbin=gcc
 set prefix=
 set nodebug=N
 set noopt=N
@@ -389,6 +390,14 @@ echo main(){} >junk.c
 gcc -c junk.c
 if exist junk.o goto checkgcc
 
+gcc-3 -c junk.c
+set gccbin=gcc-3
+if exist junk.o goto checkgcc
+
+gcc-4 -c junk.c
+set gccbin=gcc-4
+if exist junk.o goto checkgcc
+
 echo Checking whether 'cl' is available...
 cl -nologo -c junk.c
 if exist junk.obj goto clOK
@@ -404,11 +413,11 @@ if (%nocygwin%) == (Y) goto chkapiN
 echo Checking whether gcc requires '-mno-cygwin'...
 echo #include "cygwin/version.h" >junk.c
 echo main(){} >>junk.c
-echo gcc -c junk.c >>config.log
-gcc -c junk.c >>config.log 2>&1
+echo %gccbin% -c junk.c >>config.log
+%gccbin% -c junk.c >>config.log 2>&1
 if not exist junk.o goto chkapi
-echo gcc -mno-cygwin -c junk.c >>config.log
-gcc -mno-cygwin -c junk.c >>config.log 2>&1
+echo %gccbin% -mno-cygwin -c junk.c >>config.log
+%gccbin% -mno-cygwin -c junk.c >>config.log 2>&1
 if exist junk.o set nocygwin=Y
 
 :chkapi
@@ -440,10 +449,10 @@ set cf=%usercflags% -mno-cygwin
 
 :chkapi2
 echo on
-gcc %cf% -c junk.c
+%gccbin% %cf% -c junk.c
 @echo off
-@echo gcc %cf% -c junk.c >>config.log
-gcc %cf% -c junk.c >>config.log 2>&1
+@echo %gccbin% %cf% -c junk.c >>config.log
+%gccbin% %cf% -c junk.c >>config.log 2>&1
 set cf=
 if exist junk.o goto chkuser
 echo The failed program was: >>config.log
@@ -455,8 +464,8 @@ rm -f junk.o
 echo int main (int argc, char *argv[]) {>junk.c
 echo char *usercflags = "%escusercflags%";>>junk.c
 echo }>>junk.c
-echo gcc -Werror -c junk.c >>config.log
-gcc -Werror -c junk.c >>config.log 2>&1
+echo %gccbin% -Werror -c junk.c >>config.log
+%gccbin% -Werror -c junk.c >>config.log 2>&1
 if exist junk.o goto gccOk
 echo.
 echo Error in --cflags argument: %usercflags%
@@ -481,8 +490,8 @@ rm -f junk.c junk.o
 Rem It is not clear what GCC version began supporting -mtune
 Rem and pentium4 on x86, so check this explicitly.
 echo main(){} >junk.c
-echo gcc -c -O2 -mtune=pentium4 junk.c >>config.log
-gcc -c -O2 -mtune=pentium4 junk.c >>config.log 2>&1
+echo %gccbin% -c -O2 -mtune=pentium4 junk.c >>config.log
+%gccbin% -c -O2 -mtune=pentium4 junk.c >>config.log 2>&1
 if not errorlevel 1 goto gccMtuneOk
 echo The failed program was: >>config.log
 type junk.c >>config.log
@@ -498,8 +507,8 @@ rm -f junk.c junk.o
 :gccdebug
 rem Check for DWARF-2 debug info support, else default to stabs
 echo main(){} >junk.c
-echo gcc -c -gdwarf-2 -g3 junk.c >>config.log
-gcc -c -gdwarf-2 -g3 junk.c >>config.log 2>&1
+echo %gccbin% -c -gdwarf-2 -g3 junk.c >>config.log
+%gccbin% -c -gdwarf-2 -g3 junk.c >>config.log 2>&1
 if not errorlevel 1 goto gccdwarf
 echo The failed program was: >>config.log
 type junk.c >>config.log
