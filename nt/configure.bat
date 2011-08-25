@@ -774,6 +774,8 @@ if "(%HAVE_RSVG%)" == "(1)" echo #define HAVE_RSVG 1 >>config.tmp
 
 echo /* End of settings from configure.bat.  */ >>config.tmp
 
+if %MAKECMD% == gmake dos2unix config.tmp config.settings
+
 Rem See if fc.exe returns a meaningful exit status.  If it does, we
 Rem might as well avoid unnecessary overwriting of config.h and epaths.h,
 Rem since this forces recompilation of every source file.
