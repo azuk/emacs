@@ -77,15 +77,10 @@ endif
 
 MAKETYPE=gmake
 
-# The following "ifeq" does not appear to DTRT, and therefore breaks
-# the build on mingw32. Also the -m option does not exist in many
-# (reasonably recent even) versions of Cygwin. These issues need to be
-# remedied before putting this cygpath kludge back in.
-
-# Convert CURDIR to native file name, if in Cygwin format
-#ifeq "$(shell cygpath $(CURDIR))" "$(CURDIR)"
-#CURDIR	        := $(shell cygpath -m $(CURDIR))
-#endif
+# Use relative CURDIR to work around the conflict of Cygwin make
+# requiring /cygpath/c/.. style paths and native Windows Emacs not
+# understanding them.
+CURDIR=.
 
 THISDIR		= .
 

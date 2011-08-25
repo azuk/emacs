@@ -33,16 +33,18 @@ EMACS = ../src/$(BLD)/emacs.exe
 
 # Command line flags for Emacs.
 
-EMACSOPT = -batch --no-site-file --no-site-lisp
+# Instead of using EMACSLOADPATH, which is cleared just in case, we'll rely
+# on expanded current directory set in EMACSOPT so that relative CURDIR can
+# be used.
+EMACSOPT = -batch --no-site-file --no-site-lisp \
+	   --eval $(ARGQUOTE)(push (expand-file-name $(DQUOTE).$(DQUOTE)) load-path)$(ARGQUOTE)
+EMACSLOADPATH=
 
 # Extra flags to pass to the byte compiler
 BYTE_COMPILE_EXTRA_FLAGS =
 # For example to not display the undefined function warnings you can use this:
 # BYTE_COMPILE_EXTRA_FLAGS = --eval '(setq byte-compile-warnings (quote (not unresolved)))'
 # The example above is just for developers, it should not be used by default.
-
-# Set EMACSLOADPATH correctly (already defined in environment).
-EMACSLOADPATH=$(lisp)
 
 # Use C locale
 LC_ALL = C
