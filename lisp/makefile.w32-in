@@ -508,7 +508,7 @@ bootstrap: update-subdirs autoloads mh-autoloads compile finder-data custom-deps
 # Windows 95 makes this harder than it should be.
 #
 install:
-		- mkdir "$(INSTALL_DIR)/lisp"
+		- mkdir -p "$(INSTALL_DIR)/lisp"
 		- $(DEL) ../same-dir.tst
 		- $(DEL) "$(INSTALL_DIR)/same-dir.tst"
 		echo SameDirTest > "$(INSTALL_DIR)/same-dir.tst"
@@ -534,13 +534,13 @@ install:
 # since cp does not preserve time stamps
 install-lisp-SH:
 	cp -f *.el "$(INSTALL_DIR)/lisp"
-	for dir in $(WINS); do [ -d "$(INSTALL_DIR)/lisp/$$dir" ] || mkdir "$(INSTALL_DIR)/lisp/$$dir"; done
+	for dir in $(WINS); do [ -d "$(INSTALL_DIR)/lisp/$$dir" ] || mkdir -p "$(INSTALL_DIR)/lisp/$$dir"; done
 	for dir in $(WINS); do cp -f $$dir/*.el "$(INSTALL_DIR)/lisp/$$dir"; done
 	for dir in . $(WINS); do cp $$dir/*.elc "$(INSTALL_DIR)/lisp/$$dir"; done
 
 install-lisp-CMD:
 	cp -f *.el "$(INSTALL_DIR)/lisp"
-	for %%f in ($(WINS)) do if not exist "$(INSTALL_DIR)/lisp/%%f" mkdir "$(INSTALL_DIR)/lisp/%%f"
+	for %%f in ($(WINS)) do if not exist "$(INSTALL_DIR)/lisp/%%f" mkdir -p "$(INSTALL_DIR)/lisp/%%f"
 	for %%f in ($(WINS)) do cp -f %%f/*.el "$(INSTALL_DIR)/lisp/%%f"
 	for %%f in (. $(WINS)) do cp -f %%f/*.elc "$(INSTALL_DIR)/lisp/%%f"
 

@@ -307,8 +307,8 @@ $(TLASTLIB):	$(BLD)/lastfile.$(O)
 # Assuming INSTALL_DIR is defined, build and install emacs in it.
 #
 install:        $(ALL)
-	- mkdir "$(INSTALL_DIR)/bin"
-	$(CP) $(EMACS) $(INSTALL_DIR)/bin
+	- mkdir -p "$(INSTALL_DIR)/bin"
+	$(CP) $(EMACS) "$(INSTALL_DIR)/bin"
 
 #
 # Maintenance

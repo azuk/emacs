@@ -304,15 +304,15 @@ all:		stamp_BLD $(ALL) $(DOC)
 #
 INSTALL_FILES = $(ALL)
 install:	$(INSTALL_FILES)
-		- mkdir "$(INSTALL_DIR)/bin"
-		$(CP) $(BLD)/etags.exe $(INSTALL_DIR)/bin
-		$(CP) $(BLD)/ebrowse.exe $(INSTALL_DIR)/bin
-		$(CP) $(BLD)/ctags.exe $(INSTALL_DIR)/bin
-		$(CP) $(BLD)/hexl.exe $(INSTALL_DIR)/bin
-		$(CP) $(BLD)/movemail.exe $(INSTALL_DIR)/bin
-		$(CP) $(BLD)/emacsclient.exe $(INSTALL_DIR)/bin
-		$(CP) $(BLD)/emacsclientw.exe $(INSTALL_DIR)/bin
-		- mkdir "$(INSTALL_DIR)/etc"
+		- mkdir -p "$(INSTALL_DIR)/bin"
+		$(CP) $(BLD)/etags.exe "$(INSTALL_DIR)/bin"
+		$(CP) $(BLD)/ebrowse.exe "$(INSTALL_DIR)/bin"
+		$(CP) $(BLD)/ctags.exe "$(INSTALL_DIR)/bin"
+		$(CP) $(BLD)/hexl.exe "$(INSTALL_DIR)/bin"
+		$(CP) $(BLD)/movemail.exe "$(INSTALL_DIR)/bin"
+		$(CP) $(BLD)/emacsclient.exe "$(INSTALL_DIR)/bin"
+		$(CP) $(BLD)/emacsclientw.exe "$(INSTALL_DIR)/bin"
+		- mkdir -p "$(INSTALL_DIR)/etc"
 		$(CP) $(DOC) $(INSTALL_DIR)/etc
 
 #

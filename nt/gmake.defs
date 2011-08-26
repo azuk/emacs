@@ -119,6 +119,11 @@ ifndef INSTALL_DIR
 INSTALL_DIR     = $(CURDIR)/..
 endif
 
+INSTALL_DIR_MIXED := $(INSTALL_DIR)
+ifeq "$(shell cygpath $(INSTALL_DIR))" "$(INSTALL_DIR)"
+INSTALL_DIR_MIXED := $(shell cygpath -m "$(INSTALL_DIR)")
+endif
+
 export EMACSLOADPATH
 
 # Determine the architecture we're running on.
