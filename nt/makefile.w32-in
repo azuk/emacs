@@ -31,7 +31,7 @@ CLIENTRES	= $(BLD)/emacsclient.res
 
 XMFLAGS		=
 
-ALL		= addpm ddeclient runemacs cmdproxy addsection preprep
+ALL		= addpm ddeclient runemacs cmdproxy addsection preprep supersuper
 
 .PHONY: $(ALL)
 
@@ -62,6 +62,11 @@ $(BLD)/preprep.exe: $(BLD)/preprep.$(O)
 		  $(LINK) $(LINK_OUT)$@ \
 		  $(LINK_FLAGS) $(ALL_DEPS) $(BASE_LIBS)
 
+supersuper:       stamp_BLD $(BLD)/supersuper.exe
+$(BLD)/supersuper.exe: $(BLD)/supersuper.$(O)
+                 $(LINK) $(LINK_OUT)$@ \
+                 $(LINK_FLAGS) $(ALL_DEPS) $(BASE_LIBS)
+
 #
 # The resource file.  NT 3.10 requires the use of cvtres; even though
 # it is not necessary on later versions, it is still ok to use it.
@@ -84,7 +89,7 @@ which-sh:
 # before the compilation begins, even if Make runs several commands
 # in parallel under "make -j".
 #
-$(BLD)/addpm.$(O) $(BLD)/ddeclient.$(O) $(BLD)/runemacs.$(O) $(BLD)/cmdproxy.$(O) $(BLD)/addsection.$(O) $(BLD)/preprep.$(O): stamp_BLD
+$(BLD)/addpm.$(O) $(BLD)/ddeclient.$(O) $(BLD)/runemacs.$(O) $(BLD)/cmdproxy.$(O) $(BLD)/addsection.$(O) $(BLD)/preprep.$(O) $(BLD)/supersuper.$(O): stamp_BLD
 
 #
 # Build emacs
@@ -218,6 +223,7 @@ install-bin: all $(INSTALL_DIR)/bin install-other-dirs-$(MAKETYPE)
 	- $(CP) $(BLD)/ddeclient.exe $(INSTALL_DIR)/bin
 	- $(CP) $(BLD)/cmdproxy.exe $(INSTALL_DIR)/bin
 	- $(CP) $(BLD)/runemacs.exe $(INSTALL_DIR)/bin
+	- $(CP) $(BLD)/supersuper.exe $(INSTALL_DIR)/bin
 	- $(CP) README.W32 $(INSTALL_DIR)
 	- $(DEL) ../same-dir.tst
 	- $(DEL) $(INSTALL_DIR)/same-dir.tst

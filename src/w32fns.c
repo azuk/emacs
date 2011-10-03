@@ -2036,10 +2036,26 @@ sync_modifiers (void)
 }
 
 static int
+supersuper_winkeystate (int vkey)
+{
+  static HANDLE evh_left = NULL;
+  static HANDLE evh_right = NULL;
+  HANDLE* h = (vkey == VK_RWIN) ? &evh_right : &evh_left;
+  if (*h == NULL)
+    *h = OpenEvent (SYNCHRONIZE, TRUE,
+                    (vkey == VK_RWIN) ? "supersuper.right" : "supersuper.left");
+  if (*h == NULL)
+    return (GetKeyState (vkey) & 0x8000);
+  return WaitForSingleObject (*h, 0) == WAIT_OBJECT_0;
+}
+
+static int
 modifier_set (int vkey)
 {
   if (vkey == VK_CAPITAL || vkey == VK_SCROLL)
     return (GetKeyState (vkey) & 0x1);
+  if (vkey == VK_LWIN || vkey == VK_RWIN)
+    return supersuper_winkeystate(vkey);
   if (!modifiers_recorded)
     return (GetKeyState (vkey) & 0x8000);
 
@@ -6571,6 +6587,38 @@ The following %-sequences are provided:
   return status;
 }
 
+DEFUN ("w32-supersuper-run", Fw32_supersuper_run, Sw32_supersuper_run, 1, 1, 0,
+       doc: /* Control running of the supersuper keyboard hook application.
+Specify nil as RUN to terminate supersuper, non-nil to start it.
+Returns t if the operation succeeds, nil if it fails. */)
+  (run)
+  Lisp_Object run;
+{
+  if (NILP (run))
+    {
+      /* Terminate supersuper by setting the quit event */
+      HANDLE quit = OpenEvent (EVENT_MODIFY_STATE, TRUE, "supersuper.quit");
+      if (quit == NULL)
+        return Qnil;
+      SetEvent (quit);
+      CloseHandle (quit);
+      return Qt;
+    }
+  else
+    {
+      /* Start up the supersuper app */
+      STARTUPINFO sui;
+      PROCESS_INFORMATION pi;
+      sui.cb = sizeof(STARTUPINFO);
+      GetStartupInfo (&sui);
+      if (!CreateProcess (NULL, "supersuper.exe", NULL, NULL, TRUE,0, NULL, NULL, &sui, &pi))
+        return Qnil;
+      CloseHandle (pi.hProcess);
+      CloseHandle (pi.hThread);
+      return Qt;
+    }
+}
+
 
 DEFUN ("file-system-info", Ffile_system_info, Sfile_system_info, 1, 1, 0,
        doc: /* Return storage information about the file system FILENAME is on.
@@ -7102,6 +7150,7 @@ only be necessary if the default setting causes problems.  */);
   defsubr (&Sw32_toggle_lock_key);
   defsubr (&Sw32_window_exists_p);
   defsubr (&Sw32_battery_status);
+  defsubr (&Sw32_supersuper_run);
 
   defsubr (&Sfile_system_info);
   defsubr (&Sdefault_printer_name);
